@@ -27,4 +27,8 @@ public:
     bool execute();
 
     void reset();
+
+    int step();
+
+    sqlite3_stmt* get();
 };

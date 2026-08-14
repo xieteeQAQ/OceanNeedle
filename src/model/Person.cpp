@@ -42,6 +42,11 @@ int Person::getId() const
     return id;
 }
 
+void Person::setId(int id)
+{
+    this->id = id;
+}
+
 std::string Person::getName() const
 {
     return name;

@@ -72,3 +72,13 @@ void Statement::reset()
 
     sqlite3_reset(stmt);
 }
+
+int Statement::step()
+{
+    return sqlite3_step(stmt);
+}
+
+sqlite3_stmt *Statement::get()
+{
+    return stmt;
+}

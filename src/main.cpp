@@ -1,45 +1,33 @@
 #include "Database.hpp"
 #include "Statement.hpp"
 #include "Person.hpp"
+#include "Class.hpp"
+#include "PersonRepository.hpp"
+#include "StudentRepository.hpp"
+#include "ClassRepository.hpp"
 
 #include <iostream>
 
 int main()
 {
 
-    // Database db;
+    Database db;
 
-    // if (!db.isConnected())
-    // {
-    //     return 1;
-    // }
+    db.initialize();
 
-    // if (db.initialize())
-    // {
-    //     std::cout
-    //         << "Database initialized."
-    //         << std::endl;
-    // }
-    // else
-    // {
-    //     std::cout
-    //         << "Database initialized failed."
-    //         << std::endl;
-    // }
+    ClassRepository repo(db);
 
-    Person p(
-        "陈柏明",
-        "real",
-        "男",
-        2,
-        "广东东莞",
-        2
-    );
+    auto c = repo.findByNumber(
+        "1264",
+        1);
 
-
-    std::cout
-        << p.getName()
-        << std::endl;
+    if (c)
+    {
+        std::cout << c->getId()
+                  << c->getClassNumber()
+                  << c->getMajorId()
+                  << "\n";
+    }
 
     return 0;
 }

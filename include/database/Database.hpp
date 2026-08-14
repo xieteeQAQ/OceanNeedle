@@ -31,6 +31,8 @@ public:
 
     bool initialize();
 
+    int lastInsertId();
+
 private:
     std::filesystem::path locateDatabase();
 };

@@ -204,3 +204,10 @@ bool Database::initialize()
 
     return success;
 }
+
+int Database::lastInsertId()
+{
+
+    return static_cast<int>(
+        sqlite3_last_insert_rowid(db));
+}

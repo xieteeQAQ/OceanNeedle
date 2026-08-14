@@ -33,6 +33,8 @@ public:
 
     int getId() const;
 
+    void setId(int id);
+
     std::string getName() const;
 
     std::string getNameType() const;
