@@ -11,7 +11,7 @@ bool PersonRepository::save(
     Person &person)
 {
 
-    Statement *stmt =
+    auto stmt =
         database.prepare(
             R"(
         INSERT INTO Person
@@ -69,8 +69,6 @@ bool PersonRepository::save(
 
         person.setId(id);
     }
-
-    delete stmt;
 
     return result;
 }

@@ -12,7 +12,7 @@ std::unique_ptr<Class> ClassRepository::findByNumber(
     int majorId)
 {
 
-    Statement *stmt =
+    auto stmt =
         database.prepare(
             R"(
         SELECT
@@ -65,8 +65,6 @@ std::unique_ptr<Class> ClassRepository::findByNumber(
                 major);
     }
 
-    delete stmt;
-
     return result;
 }
 
@@ -74,7 +72,7 @@ bool ClassRepository::save(
     Class &classInfo)
 {
 
-    Statement *stmt =
+    auto stmt =
         database.prepare(
             R"(
         INSERT INTO Class
@@ -106,8 +104,6 @@ bool ClassRepository::save(
         classInfo.setId(
             database.lastInsertId());
     }
-
-    delete stmt;
 
     return result;
 }

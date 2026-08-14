@@ -11,7 +11,7 @@ bool StudentRepository::save(
     Student &student)
 {
 
-    Statement *stmt =
+    auto stmt =
         database.prepare(
             R"(
         INSERT INTO Student
@@ -37,8 +37,6 @@ bool StudentRepository::save(
 
     bool result =
         stmt->execute();
-
-    delete stmt;
 
     return result;
 }

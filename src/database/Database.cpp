@@ -79,11 +79,11 @@ bool Database::execute(
     return true;
 }
 
-Statement *Database::prepare(
+std::unique_ptr<Statement> Database::prepare(
     const std::string &sql)
 {
 
-    return new Statement(
+    return std::make_unique<Statement>(
         db,
         sql);
 }

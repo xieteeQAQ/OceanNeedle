@@ -2,6 +2,8 @@
 
 #include <sqlite3.h>
 #include <filesystem>
+#include <memory>
+
 #include "Statement.hpp"
 
 class Database
@@ -20,7 +22,7 @@ public:
     bool execute(
         const std::string &sql);
 
-    Statement *prepare(
+    std::unique_ptr<Statement> prepare(
         const std::string &sql);
 
     bool beginTransaction();
