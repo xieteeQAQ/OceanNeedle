@@ -22,9 +22,11 @@ add_executable(OceanNeedle
     src/model/Person.cpp
     src/model/Student.cpp
     src/model/Class.cpp
+    src/model/Major.cpp
     src/repository/PersonRepository.cpp
     src/repository/StudentRepository.cpp
     src/repository/ClassRepository.cpp
+    src/repository/MajorRepository.cpp
 )
 
 target_link_libraries(OceanNeedle

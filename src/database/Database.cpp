@@ -132,14 +132,12 @@ bool Database::initialize()
     (
         id INTEGER PRIMARY KEY,
 
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE,
 
         college_id INTEGER NOT NULL,
 
         FOREIGN KEY(college_id)
-            REFERENCES College(id),
-
-        UNIQUE(name,college_id)
+            REFERENCES College(id)
     );
     )");
 

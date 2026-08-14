@@ -2,9 +2,11 @@
 #include "Statement.hpp"
 #include "Person.hpp"
 #include "Class.hpp"
+#include "Major.hpp"
 #include "PersonRepository.hpp"
 #include "StudentRepository.hpp"
 #include "ClassRepository.hpp"
+#include "MajorRepository.hpp"
 
 #include <iostream>
 
@@ -15,18 +17,18 @@ int main()
 
     db.initialize();
 
-    ClassRepository repo(db);
+    MajorRepository repo(db);
 
-    auto c = repo.findByNumber(
-        "1264",
+    Major m1(
+        "软件工程",
         1);
 
-    if (c)
+    if (repo.save(m1))
     {
-        std::cout << c->getId()
-                  << c->getClassNumber()
-                  << c->getMajorId()
-                  << "\n";
+        auto m2 = repo.findByName("软件工程");
+
+        if (m2)
+            std::cout << m2->getId();
     }
 
     return 0;
