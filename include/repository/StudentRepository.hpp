@@ -18,4 +18,8 @@ public:
 
     std::unique_ptr<Student> findByPersonId(
         int personId);
+
+    bool exists(
+        int personId,
+        int classId);
 };

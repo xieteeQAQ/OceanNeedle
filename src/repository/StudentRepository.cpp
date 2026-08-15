@@ -85,3 +85,29 @@ std::unique_ptr<Student> StudentRepository::findByPersonId(
 
     return result;
 }
+
+bool StudentRepository::exists(
+    int personId,
+    int classId)
+{
+
+    auto stmt =
+        database.prepare(
+            R"(
+        SELECT 1
+        FROM Student
+        WHERE person_id=?
+        AND class_id=?
+        LIMIT 1;
+        )");
+
+    stmt->bindInt(
+        1,
+        personId);
+
+    stmt->bindInt(
+        2,
+        classId);
+
+    return stmt->step() == SQLITE_ROW;
+}

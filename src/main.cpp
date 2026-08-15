@@ -10,6 +10,10 @@
 #include "MajorRepository.hpp"
 #include "CollegeRepository.hpp"
 #include "StudentService.hpp"
+#include "StudentImporter.hpp"
+#include "StudentImportService.hpp"
+#include "StudentValidator.hpp"
+#include "CSVReader.hpp"
 
 #include <iostream>
 
@@ -20,28 +24,71 @@ int main()
 
     db.initialize();
 
-    PersonRepository personRepo(
-        db);
+    PersonRepository personRepo(db);
 
-    StudentRepository studentRepo(
-        db);
+    ClassRepository classRepo(db);
 
-    ClassRepository classRepo(
-        db);
+    MajorRepository majorRepo(db);
 
-    MajorRepository majorRepo(
-        db);
+    CollegeRepository collegeRepo(db);
 
-    CollegeRepository collegeRepo(
-        db);
+    StudentRepository studentRepo(db);
 
-    StudentService studentService(
-        studentRepo,
+    StudentImporter importer;
+
+    auto rows =
+        importer.readCSV(
+            "./data/students.csv");
+
+    for (const auto &row : rows)
+    {
+
+        std::cout
+            << row.classNumber
+            << ", "
+            << row.name
+            << ", "
+            << row.nameType
+            << ", "
+            << row.gender
+            << ", "
+            << row.genderConfidence
+            << ", "
+            << row.residence
+            << ", "
+            << row.residenceConfidence
+            << std::endl;
+    }
+
+    StudentImportService service(
+        db,
         personRepo,
         classRepo,
-        majorRepo,
-        collegeRepo);
-    
-    studentService.showStudentDetail(
+        studentRepo);
+
+    ImportResult result = service.importStudents(
+        rows,
         1);
+
+    std::cout
+        << "Success: "
+        << result.successCount
+        << ", Failed: "
+        << result.failedCount
+        << std::endl;
+
+    if (result.failedCount > 0)
+    {
+
+        for (const auto &error : result.errors)
+        {
+
+            std::cout
+                << "Row "
+                << error.row
+                << ": "
+                << error.reason
+                << std::endl;
+        }
+    }
 }

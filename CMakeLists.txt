@@ -14,6 +14,9 @@ include_directories(
     include/model
     include/repository
     include/service
+    include/importer
+    include/util
+    include/validator
 )
 
 add_executable(OceanNeedle
@@ -31,6 +34,10 @@ add_executable(OceanNeedle
     src/repository/MajorRepository.cpp
     src/repository/CollegeRepository.cpp
     src/service/StudentService.cpp
+    src/service/StudentImportService.cpp
+    src/importer/StudentImporter.cpp
+    src/util/CSVReader.cpp
+    src/validator/StudentValidator.cpp
 )
 
 target_link_libraries(OceanNeedle

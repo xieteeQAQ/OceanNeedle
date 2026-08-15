@@ -3,6 +3,8 @@
 #include "Database.hpp"
 #include "Person.hpp"
 
+#include <vector>
+
 class PersonRepository
 {
 
@@ -16,13 +18,13 @@ public:
     bool save(
         Person &person);
 
-    std::unique_ptr<Person> findByName(
+    std::vector<Person> findByName(
         const std::string &name);
 
     std::unique_ptr<Person> findById(
         int id);
 
-    std::unique_ptr<Person> findOrCreateByName(
+    std::vector<Person> findOrCreateByName(
         const std::string &name,
         const std::string &nameType,
         const std::string &gender,

@@ -191,6 +191,21 @@ bool Database::initialize()
     );
     )");
 
+    success &= execute(R"(
+    CREATE TABLE ImportRecord
+    (
+        id INTEGER PRIMARY KEY,
+
+        file_name TEXT NOT NULL,
+
+        import_time TEXT NOT NULL,
+
+        success_count INTEGER NOT NULL,
+
+        failed_count INTEGER NOT NULL
+    );
+    )");
+
     if (success)
     {
         commit();

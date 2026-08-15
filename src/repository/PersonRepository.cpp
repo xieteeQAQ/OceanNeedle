@@ -73,7 +73,7 @@ bool PersonRepository::save(
     return result;
 }
 
-std::unique_ptr<Person> PersonRepository::findByName(
+std::vector<Person> PersonRepository::findByName(
     const std::string &name)
 {
 
@@ -98,12 +98,9 @@ std::unique_ptr<Person> PersonRepository::findByName(
         1,
         name);
 
-    std::unique_ptr<Person> result = nullptr;
+    std::vector<Person> result;
 
-    int code =
-        stmt->step();
-
-    if (code == SQLITE_ROW)
+    while (stmt->step() == SQLITE_ROW)
     {
         int id =
             sqlite3_column_int(
@@ -144,17 +141,16 @@ std::unique_ptr<Person> PersonRepository::findByName(
                 stmt->get(),
                 6);
 
-        result =
-            std::make_unique<Person>(
+        result.push_back(
+            Person(
                 id,
                 personName,
                 nameType,
                 gender,
                 genderConfidence,
                 residence,
-                residenceConfidence);
-                
-        result->setId(id);
+                residenceConfidence));
+        result.back().setId(id);
     }
 
     return result;
@@ -247,7 +243,7 @@ std::unique_ptr<Person> PersonRepository::findById(
     return result;
 }
 
-std::unique_ptr<Person> PersonRepository::findOrCreateByName(
+std::vector<Person> PersonRepository::findOrCreateByName(
     const std::string &name,
     const std::string &nameType,
     const std::string &gender,
@@ -258,7 +254,7 @@ std::unique_ptr<Person> PersonRepository::findOrCreateByName(
     auto person =
         findByName(name);
 
-    if (!person)
+    if (person.empty())
     {
 
         Person newPerson(
@@ -271,9 +267,7 @@ std::unique_ptr<Person> PersonRepository::findOrCreateByName(
 
         if (save(newPerson))
         {
-            person =
-                std::make_unique<Person>(
-                    newPerson);
+            person = findByName(name);
         }
     }
 
