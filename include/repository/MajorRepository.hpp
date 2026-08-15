@@ -18,4 +18,11 @@ public:
 
     bool save(
         Major &Major);
+
+    std::unique_ptr<Major> findOrCreateByName(
+        const std::string &name,
+        int collegeId);
+
+    std::unique_ptr<Major> findById(
+        int id);
 };

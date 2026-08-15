@@ -101,3 +101,83 @@ bool MajorRepository::save(
 
     return result;
 }
+
+std::unique_ptr<Major> MajorRepository::findOrCreateByName(
+    const std::string &name,
+    int collegeId)
+{
+
+    auto major =
+        findByName(name);
+
+    if (!major)
+    {
+        Major newMajor(
+            name,
+            collegeId);
+
+        if (save(newMajor))
+        {
+            major =
+                std::make_unique<Major>(
+                    newMajor);
+        }
+    }
+
+    return major;
+}
+
+std::unique_ptr<Major> MajorRepository::findById(
+    int id)
+{
+
+    auto stmt =
+        database.prepare(
+            R"(
+        SELECT
+            id,
+            name,
+            college_id
+
+        FROM Major
+
+        WHERE id = ?;
+        )");
+
+    stmt->bindInt(
+        1,
+        id);
+
+    std::unique_ptr<Major> result = nullptr;
+
+    int code =
+        stmt->step();
+
+    if (code == SQLITE_ROW)
+    {
+
+        int majorId =
+            sqlite3_column_int(
+                stmt->get(),
+                0);
+
+        std::string majorName =
+            reinterpret_cast<const char *>(
+                sqlite3_column_text(
+                    stmt->get(),
+                    1));
+
+        int college =
+            sqlite3_column_int(
+                stmt->get(),
+                2);
+
+        result =
+            std::make_unique<Major>(
+                majorId,
+                majorName,
+                college);
+    }
+
+    return result;
+}

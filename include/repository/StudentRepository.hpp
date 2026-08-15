@@ -15,4 +15,7 @@ public:
 
     bool save(
         Student &student);
+
+    std::unique_ptr<Student> findByPersonId(
+        int personId);
 };
