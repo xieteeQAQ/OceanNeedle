@@ -192,7 +192,7 @@ bool Database::initialize()
     )");
 
     success &= execute(R"(
-    CREATE TABLE ImportRecord
+    CREATE TABLE IF NOT EXISTS ImportRecord
     (
         id INTEGER PRIMARY KEY,
 

@@ -28,11 +28,13 @@ add_executable(OceanNeedle
     src/model/Class.cpp
     src/model/Major.cpp
     src/model/College.cpp
+    src/model/ImportRecord.cpp
     src/repository/PersonRepository.cpp
     src/repository/StudentRepository.cpp
     src/repository/ClassRepository.cpp
     src/repository/MajorRepository.cpp
     src/repository/CollegeRepository.cpp
+    src/repository/ImportRecordRepository.cpp
     src/service/StudentService.cpp
     src/service/StudentImportService.cpp
     src/importer/StudentImporter.cpp

@@ -148,5 +148,10 @@ ImportResult StudentImportService::importStudents(
         }
     }
 
+    if (!database.commit())
+    {
+        std::cerr << "Failed to commit import transaction." << std::endl;
+    }
+
     return result;
 }
