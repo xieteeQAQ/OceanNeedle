@@ -5,6 +5,12 @@
 struct StudentRow
 {
 
+    std::string college;
+
+    std::string major;
+
+    std::string role;
+
     std::string name;
 
     std::string nameType;

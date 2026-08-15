@@ -1,4 +1,5 @@
 #include "ImportRecordRepository.hpp"
+#include "Statement.hpp"
 
 #include <iostream>
 

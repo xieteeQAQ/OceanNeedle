@@ -4,6 +4,24 @@ std::optional<std::string> StudentValidator::validate(
     const StudentRow &row)
 {
 
+    if (row.college.empty())
+    {
+
+        return "College is empty";
+    }
+
+    if (row.major.empty())
+    {
+
+        return "Major is empty";
+    }
+
+    if (row.role.empty())
+    {
+
+        return "role is empty";
+    }
+
     if (row.name.empty())
     {
 

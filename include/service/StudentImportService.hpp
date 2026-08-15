@@ -6,6 +6,8 @@
 #include "PersonRepository.hpp"
 #include "ClassRepository.hpp"
 #include "StudentRepository.hpp"
+#include "MajorRepository.hpp"
+#include "CollegeRepository.hpp"
 
 #include "ImportResult.hpp"
 #include "ImportMode.hpp"
@@ -18,6 +20,10 @@ class StudentImportService
 private:
     Database &database;
 
+    CollegeRepository &collegeRepo;
+
+    MajorRepository &majorRepo;
+
     PersonRepository &personRepo;
 
     ClassRepository &classRepo;
@@ -27,13 +33,14 @@ private:
 public:
     StudentImportService(
         Database &db,
+        CollegeRepository &collegeRepo,
+        MajorRepository &majorRepo,
         PersonRepository &personRepo,
         ClassRepository &classRepo,
         StudentRepository &studentRepo);
 
-    std::optional<std::string> importStudent(
+        ImportDetailData importStudent(
         const StudentRow &row,
-        int majorId,
         DuplicatePolicy policy = DuplicatePolicy::SKIP);
 
     ImportResult importStudents(

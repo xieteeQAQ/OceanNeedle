@@ -38,7 +38,7 @@ StudentImporter::readCSV(
         auto fields =
             CSVReader::split(line);
 
-        if (fields.size() != 7)
+        if (fields.size() != 10)
         {
             std::cerr
                 << "Invalid row\n";
@@ -48,26 +48,35 @@ StudentImporter::readCSV(
 
         StudentRow row;
 
-        row.classNumber =
+        row.college =
             fields[0];
 
-        row.name =
+        row.major =
             fields[1];
 
-        row.nameType =
+        row.classNumber =
             fields[2];
 
+        row.role =
+            fields[3];
+
+        row.name =
+            fields[4];
+
+        row.nameType =
+            fields[5];
+
         row.gender =
-            fields[3] == "NULL" ? "" : fields[3];
+            fields[6] == "NULL" ? "" : fields[6];
 
         row.genderConfidence =
-            std::stoi(fields[4]);
+            std::stoi(fields[7]);
 
         row.residence =
-            fields[5] == "NULL" ? "" : fields[5];
+            fields[8] == "NULL" ? "" : fields[8];
 
         row.residenceConfidence =
-            std::stoi(fields[6]);
+            std::stoi(fields[9]);
 
         students.push_back(row);
     }

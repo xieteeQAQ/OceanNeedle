@@ -5,21 +5,26 @@
 
 StudentImportService::StudentImportService(
     Database &db,
+    CollegeRepository &collegeRepo,
+    MajorRepository &majorRepo,
     PersonRepository &personRepo,
     ClassRepository &classRepo,
     StudentRepository &studentRepo)
     : database(db),
+      collegeRepo(collegeRepo),
+      majorRepo(majorRepo),
       personRepo(personRepo),
       classRepo(classRepo),
       studentRepo(studentRepo)
 {
 }
 
-std::optional<std::string> StudentImportService::importStudent(
+ImportDetailData StudentImportService::importStudent(
     const StudentRow &row,
-    int majorId,
     DuplicatePolicy policy)
 {
+
+    ImportDetailData importDetailData;
 
     std::optional<std::string> validationError =
         StudentValidator::validate(row);
@@ -27,13 +32,35 @@ std::optional<std::string> StudentImportService::importStudent(
     if (validationError.has_value())
     {
 
-        return validationError.value();
+        importDetailData = {
+            -1,
+            row.name,
+            ImportStatus::FAILED,
+            validationError.value()};
+
+        return importDetailData;
+    }
+
+    auto majorInfo =
+        majorRepo.findByName(
+            row.major);
+
+    if (!majorInfo)
+    {
+
+        importDetailData = {
+            -1,
+            row.name,
+            ImportStatus::FAILED,
+            "Major not found"};
+
+        return importDetailData;
     }
 
     auto classInfo =
         classRepo.findByNumber(
             row.classNumber,
-            majorId);
+            majorInfo->getId());
 
     auto persons =
         personRepo.findByName(
@@ -51,22 +78,35 @@ std::optional<std::string> StudentImportService::importStudent(
             if (policy == DuplicatePolicy::SKIP)
             {
 
-                return std::nullopt;
+                importDetailData = {
+                    -1,
+                    row.name,
+                    ImportStatus::SKIPPED,
+                    "Student already exists"};
+
+                return importDetailData;
             }
 
-            return "Student " + row.name + " already exists";
+            importDetailData = {
+                -1,
+                row.name,
+                ImportStatus::FAILED,
+                "Student already exists"};
+
+            return importDetailData;
         }
     }
 
     if (!classInfo)
     {
 
-        std::cerr
-            << "Class not found: "
-            << row.classNumber
-            << std::endl;
+        importDetailData = {
+            -1,
+            row.name,
+            ImportStatus::FAILED,
+            "Class not found"};
 
-        return "Class not found";
+        return importDetailData;
     }
 
     Person person(
@@ -79,7 +119,14 @@ std::optional<std::string> StudentImportService::importStudent(
 
     if (!personRepo.save(person))
     {
-        return "Failed to save person";
+
+        importDetailData = {
+            -1,
+            row.name,
+            ImportStatus::FAILED,
+            "Failed to save person"};
+
+        return importDetailData;
     }
 
     Student student(
@@ -88,10 +135,23 @@ std::optional<std::string> StudentImportService::importStudent(
 
     if (!studentRepo.save(student))
     {
-        return "Failed to save student";
+
+        importDetailData = {
+            -1,
+            row.name,
+            ImportStatus::FAILED,
+            "Failed to save person"};
+
+        return importDetailData;
     }
 
-    return std::nullopt;
+    importDetailData = {
+        -1,
+        row.name,
+        ImportStatus::SUCCESS,
+        ""};
+
+    return importDetailData;
 }
 
 ImportResult StudentImportService::importStudents(
@@ -110,18 +170,24 @@ ImportResult StudentImportService::importStudents(
     for (const auto &row : rows)
     {
 
-        std::optional<std::string> error =
+        auto imporDetailData =
             importStudent(
                 row,
-                majorId,
                 policy);
 
-        if (error.has_value())
+        imporDetailData.rowNumber = rowNumber;
+
+        result.details.push_back(imporDetailData);
+
+        if (imporDetailData.status == ImportStatus::FAILED)
         {
 
-            result.addError(
-                rowNumber,
-                error.value());
+            result.addFailed();
+        }
+        else if (imporDetailData.status == ImportStatus::SKIPPED)
+        {
+
+            result.addSkipped();
         }
         else
         {

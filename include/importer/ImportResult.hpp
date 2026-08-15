@@ -3,12 +3,23 @@
 #include <string>
 #include <vector>
 
-struct ImportError
+#include "ImportDetail.hpp"
+#include "ImportMode.hpp"
+
+struct ImportDetailData
 {
 
-    int row;
+    int rowNumber;
 
-    std::string reason;
+
+    std::string studentName;
+
+
+    ImportStatus status;
+
+
+    std::string message;
+
 };
 
 class ImportResult
@@ -19,22 +30,23 @@ public:
 
     int failedCount = 0;
 
-    std::vector<ImportError> errors;
+    int skippedCount = 0;
+
+    std::vector<ImportDetailData> details;
+
 
     void addSuccess()
     {
         successCount++;
     }
 
-    void addError(
-        int row,
-        const std::string &reason)
+    void addFailed()
     {
-
         failedCount++;
+    }
 
-        errors.push_back(
-            {row,
-             reason});
+    void addSkipped()
+    {
+        skippedCount++;
     }
 };

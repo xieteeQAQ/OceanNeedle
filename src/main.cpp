@@ -40,105 +40,75 @@ int main()
 
     StudentRepository studentRepo(db);
 
-    StudentImporter importer;
+    // StudentImporter importer;
 
-    for (int i = 1; i <= 4; ++i)
+    // auto rows =
+    //     importer.readCSV(
+    //         "./data/SMCS_student.csv");
+
+    // StudentImportService service(
+    //     db,
+    //     collegeRepo,
+    //     majorRepo,
+    //     personRepo,
+    //     classRepo,
+    //     studentRepo);
+
+    // ImportResult result = service.importStudents(
+    //     rows,
+    //     1);
+
+    // ImportRecordRepository importRecordRepo(db);
+
+    // ImportRecord record(
+
+    //     "students.csv",
+
+    //     ImportRecord::getCurrentTime(),
+
+    //     result.successCount,
+
+    //     result.failedCount
+
+    // );
+
+    // if (!importRecordRepo.save(record))
+    // {
+    //     std::cerr << "Failed to save import record." << std::endl;
+    // }
+
+    for (int i = 1; i <= 140; ++i)
     {
 
-        std::string class_number = "126" + std::to_string(i);
+        auto student = 
+            studentRepo.findByPersonId(i);
 
-        Class c(
-            class_number,
-            2);
-        
-        if (classRepo.save(c))
-        {
+        auto person = 
+            personRepo.findById(i);
 
-            std::cout << class_number + "insert success\n";
-        }
-    }
+        auto classInfo = 
+            classRepo.findById(student->getClassId());
 
-    auto rows =
-        importer.readCSV(
-            "./data/students.csv");
+        auto major = 
+            majorRepo.findById(classInfo->getMajorId());
 
-    for (const auto &row : rows)
-    {
+        auto college =
+            collegeRepo.findById(major->getCollegeId());
 
-        std::cout
-            << row.classNumber
-            << ", "
-            << row.name
-            << ", "
-            << row.nameType
-            << ", "
-            << row.gender
-            << ", "
-            << row.genderConfidence
-            << ", "
-            << row.residence
-            << ", "
-            << row.residenceConfidence
-            << std::endl;
-    }
-
-    StudentImportService service(
-        db,
-        personRepo,
-        classRepo,
-        studentRepo);
-
-    ImportResult result = service.importStudents(
-        rows,
-        1);
-
-    std::cout
-        << "Success: "
-        << result.successCount
-        << ", Failed: "
-        << result.failedCount
-        << std::endl;
-
-    if (result.failedCount > 0)
-    {
-
-        for (const auto &error : result.errors)
-        {
-
-            std::cout
-                << "Row "
-                << error.row
-                << ": "
-                << error.reason
-                << std::endl;
-        }
-    }
-
-    ImportRecordRepository importRecordRepo(db);
-
-    ImportRecord record(
-
-        "students.csv",
-
-        ImportRecord::getCurrentTime(),
-
-        result.successCount,
-
-        result.failedCount
-
-    );
-
-    std::cout << record.getFileName()
-              << ", "
-              << record.getImportTime()
-              << ", "
-              << record.getSuccessCount()
-              << ", "
-              << record.getFailedCount()
-              << std::endl;
-
-    if (!importRecordRepo.save(record))
-    {
-        std::cerr << "Failed to save import record." << std::endl;
+        std::cout << "\n姓名: "
+                  << person->getName()
+                  << '\n'
+                  << "性别: "
+                  << person->getGender()
+                  << '\n'
+                  << "学院: "
+                  << college->getName()  
+                  << '\n'
+                  << "专业: "
+                  << major->getName()
+                  << '\n'
+                  << "住址: "
+                  << person->getResidence()
+                  << '\n';
     }
 }

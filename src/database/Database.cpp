@@ -206,7 +206,27 @@ bool Database::initialize()
     );
     )");
 
-    if (success)
+    success &= execute(R"(
+    CREATE TABLE IF NOT EXISTS ImportDetail
+    (
+        id INTEGER PRIMARY KEY,
+
+        import_record_id INTEGER NOT NULL,
+
+        row_number INTEGER NOT NULL,
+
+        student_name TEXT,
+
+        status TEXT NOT NULL,
+
+        message TEXT,
+
+        FOREIGN KEY(import_record_id)
+            REFERENCES ImportRecord(id)
+    );
+    )");
+
+        if (success)
     {
         commit();
     }

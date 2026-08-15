@@ -1,3 +1,5 @@
+#pragma once
+
 enum class ImportMode
 {
     STRICT,
@@ -9,4 +11,11 @@ enum class DuplicatePolicy
     SKIP,
     UPDATE,
     ERROR
+};
+
+enum class ImportStatus
+{
+    SUCCESS,
+    FAILED,
+    SKIPPED
 };
