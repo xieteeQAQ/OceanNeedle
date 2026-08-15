@@ -109,42 +109,51 @@ std::unique_ptr<Person> PersonRepository::findByName(
             sqlite3_column_int(
                 stmt->get(),
                 0);
+
         std::string personName =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     1));
+
         std::string nameType =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     2));
+
         std::string gender =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     3));
+
         int genderConfidence =
             sqlite3_column_int(
                 stmt->get(),
                 4);
+
         std::string residence =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     5));
+
         int residenceConfidence =
             sqlite3_column_int(
                 stmt->get(),
                 6);
+
         result =
             std::make_unique<Person>(
+                id,
                 personName,
                 nameType,
                 gender,
                 genderConfidence,
                 residence,
                 residenceConfidence);
+                
         result->setId(id);
     }
 
@@ -183,47 +192,56 @@ std::unique_ptr<Person> PersonRepository::findById(
 
     if (code == SQLITE_ROW)
     {
-        int personId =
+        int id =
             sqlite3_column_int(
                 stmt->get(),
                 0);
+
         std::string personName =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     1));
+
         std::string nameType =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     2));
+
         std::string gender =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     3));
+
         int genderConfidence =
             sqlite3_column_int(
                 stmt->get(),
                 4);
+
         std::string residence =
             reinterpret_cast<const char *>(
                 sqlite3_column_text(
                     stmt->get(),
                     5));
+
         int residenceConfidence =
             sqlite3_column_int(
                 stmt->get(),
                 6);
+
         result =
             std::make_unique<Person>(
+                id,
                 personName,
                 nameType,
                 gender,
                 genderConfidence,
                 residence,
                 residenceConfidence);
-        result->setId(personId);
+
+        result->setId(id);
     }
 
     return result;

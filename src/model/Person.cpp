@@ -37,6 +37,30 @@ Person::Person(
     id = -1;
 }
 
+Person::Person(
+    int id,
+    std::string name,
+    std::string nameType,
+    std::string gender,
+    int genderConfidence,
+    std::string residence,
+    int residenceConfidence)
+{
+    this->id = id;
+
+    this->name = name;
+
+    this->nameType = nameType;
+
+    this->gender = gender;
+
+    this->genderConfidence = genderConfidence;
+
+    this->residence = residence;
+
+    this->residenceConfidence = residenceConfidence;
+}
+
 int Person::getId() const
 {
     return id;

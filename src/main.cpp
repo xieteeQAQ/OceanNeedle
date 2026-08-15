@@ -9,6 +9,7 @@
 #include "ClassRepository.hpp"
 #include "MajorRepository.hpp"
 #include "CollegeRepository.hpp"
+#include "StudentService.hpp"
 
 #include <iostream>
 
@@ -19,65 +20,28 @@ int main()
 
     db.initialize();
 
-    PersonRepository repo(db);
+    PersonRepository personRepo(
+        db);
 
-    auto person =
-        repo.findById(
-            1);
+    StudentRepository studentRepo(
+        db);
 
-    StudentRepository studentRepo(db);
+    ClassRepository classRepo(
+        db);
 
-    auto student =
-        studentRepo.findByPersonId(
-            person->getId());
+    MajorRepository majorRepo(
+        db);
 
-    ClassRepository classRepo(db);
+    CollegeRepository collegeRepo(
+        db);
 
-    auto Class =
-        classRepo.findById(
-            student->getClassId());
-
-    MajorRepository majorRepo(db);
-
-    auto major =
-        majorRepo.findById(
-            Class->getMajorId());
-
-    CollegeRepository collegeRepo(db);
-
-    auto college =
-        collegeRepo.findById(
-            major->getCollegeId());
-
-    if (college)
-    {
-
-        std::cout
-            << "Person found: "
-            << person->getName()
-            << std::endl;
-
-        std::cout
-            << "Class found: "
-            << Class->getClassNumber()
-            << std::endl;
-
-        std::cout
-            << "Major found: "
-            << major->getName()
-            << std::endl;
-
-        std::cout
-            << "College found: "
-            << college->getName()
-            << std::endl;
-    }
-    else
-    {
-        std::cout
-            << "College not found"
-            << std::endl;
-    }
-
-    return 0;
+    StudentService studentService(
+        studentRepo,
+        personRepo,
+        classRepo,
+        majorRepo,
+        collegeRepo);
+    
+    studentService.showStudentDetail(
+        1);
 }

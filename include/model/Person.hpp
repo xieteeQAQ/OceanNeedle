@@ -31,6 +31,15 @@ public:
         std::string residence,
         int residenceConfidence);
 
+    Person(
+        int id,
+        std::string name,
+        std::string nameType,
+        std::string gender,
+        int genderConfidence,
+        std::string residence,
+        int residenceConfidence);
+
     int getId() const;
 
     void setId(int id);

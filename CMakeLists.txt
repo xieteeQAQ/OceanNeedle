@@ -13,6 +13,7 @@ include_directories(
     include/database
     include/model
     include/repository
+    include/service
 )
 
 add_executable(OceanNeedle
@@ -29,6 +30,7 @@ add_executable(OceanNeedle
     src/repository/ClassRepository.cpp
     src/repository/MajorRepository.cpp
     src/repository/CollegeRepository.cpp
+    src/service/StudentService.cpp
 )
 
 target_link_libraries(OceanNeedle
