@@ -67,3 +67,128 @@ void StudentService::showStudentDetail(
         << college->getName()
         << '\n';
 }
+
+std::vector<StudentSummary> StudentService::listAllStudents()
+{
+
+    /*
+    StudentSummary
+    {
+        int personId = 0;
+        std::string name;
+        std::string gender;
+        std::string className;
+        std::string majorName;
+        std::string collegeName;
+        std::string residence;
+    }
+    */
+
+    std::vector<StudentSummary> result;
+
+    auto students = studentRepo.findAll();
+
+    for (const auto &s : students)
+    {
+
+        auto person = personRepo.findById(s.getPersonId());
+
+        auto classInfo = classRepo.findById(s.getClassId());
+
+        auto major = majorRepo.findById(classInfo->getMajorId());
+
+        auto college = collegeRepo.findById(major->getCollegeId());
+
+        result.push_back({person->getId(),
+                          person->getName(),
+                          person->getGender(),
+                          classInfo->getClassNumber(),
+                          major->getName(),
+                          college->getName(),
+                          person->getResidence()});
+    }
+
+    return result;
+}
+
+std::optional<StudentDetail> StudentService::getStudentDetail(int personId)
+{
+    /*
+    StudentDetail
+    {
+        int personId = 0;
+        std::string name;
+        std::string nameType;
+        std::string gender;
+        int genderConfidence;
+        std::string residence;
+        int residenceConfidence;
+        std::string className;
+        std::string majorName;
+        std::string collegeName;
+    }
+    */
+
+    auto student = studentRepo.findByPersonId(personId);
+    if (!student)
+        return std::nullopt;
+
+    auto person = personRepo.findById(personId);
+    if (!person)
+        return std::nullopt;
+
+    auto classInfo = classRepo.findById(student->getClassId());
+    if (!classInfo)
+        return std::nullopt;
+
+    auto major = majorRepo.findById(classInfo->getMajorId());
+    if (!major)
+        return std::nullopt;
+
+    auto college = collegeRepo.findById(major->getCollegeId());
+    if (!college)
+        return std::nullopt;
+
+    StudentDetail result = {
+        personId,
+        person->getName(),
+        person->getNameType(),
+        person->getGender(),
+        person->getGenderConfidence(),
+        person->getResidence(),
+        person->getResidenceConfidence(),
+        classInfo->getClassNumber(),
+        major->getName(),
+        college->getName()};
+
+    return result;
+}
+
+std::vector<StudentSummary> StudentService::searchStudents(const std::string &keyword)
+{
+
+    std::vector<StudentSummary> result;
+
+    if (keyword.empty())
+    {
+        return listAllStudents();
+    }
+
+    auto allStudents = listAllStudents();
+
+    for (const auto &student : allStudents)
+    {
+        
+        if (student.name.find(keyword) != std::string::npos ||
+            student.gender.find(keyword) != std::string::npos ||
+            student.className.find(keyword) != std::string::npos ||
+            student.majorName.find(keyword) != std::string::npos ||
+            student.collegeName.find(keyword) != std::string::npos ||
+            student.residence.find(keyword) != std::string::npos)
+        {
+            result.push_back(student);
+        }
+    }
+
+    return result;
+}

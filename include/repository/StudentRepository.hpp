@@ -3,6 +3,8 @@
 #include "Database.hpp"
 #include "Student.hpp"
 
+#include <vector>
+
 class StudentRepository
 {
 
@@ -22,4 +24,6 @@ public:
     bool exists(
         int personId,
         int classId);
+
+    std::vector<Student> findAll();
 };

@@ -109,3 +109,22 @@ bool StudentRepository::exists(
 
     return stmt->step() == SQLITE_ROW;
 }
+
+std::vector<Student> StudentRepository::findAll()
+{
+
+    std::vector<Student> result;
+
+    auto stmt = database.prepare(
+        "SELECT person_id, class_id FROM Student;");
+
+    while (stmt->step() == SQLITE_ROW)
+    {
+        int personId = sqlite3_column_int(stmt->get(), 0);
+        int classId = sqlite3_column_int(stmt->get(), 1);
+
+        result.push_back(Student(personId, classId));
+    }
+
+    return result;
+}

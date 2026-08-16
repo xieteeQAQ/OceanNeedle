@@ -45,7 +45,6 @@ public:
 
     ImportResult importStudents(
         const std::vector<StudentRow> &rows,
-        int majorId,
         ImportMode mode = ImportMode::STRICT,
         DuplicatePolicy policy = DuplicatePolicy::SKIP);
 

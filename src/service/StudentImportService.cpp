@@ -156,7 +156,6 @@ ImportDetailData StudentImportService::importStudent(
 
 ImportResult StudentImportService::importStudents(
     const std::vector<StudentRow> &rows,
-    int majorId,
     ImportMode mode,
     DuplicatePolicy policy)
 {
