@@ -30,8 +30,7 @@ std::unique_ptr<Major> MajorRepository::findByName(
 
     std::unique_ptr<Major> result = nullptr;
 
-    int code =
-        stmt->step();
+    int code = stmt->step();
 
     if (code == SQLITE_ROW)
     {
@@ -90,8 +89,7 @@ bool MajorRepository::save(
         2,
         Major.getCollegeId());
 
-    bool result =
-        stmt->execute();
+    bool result = stmt->execute();
 
     if (result)
     {
@@ -150,8 +148,7 @@ std::unique_ptr<Major> MajorRepository::findById(
 
     std::unique_ptr<Major> result = nullptr;
 
-    int code =
-        stmt->step();
+    int code = stmt->step();
 
     if (code == SQLITE_ROW)
     {

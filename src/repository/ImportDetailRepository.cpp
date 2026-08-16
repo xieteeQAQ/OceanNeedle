@@ -33,7 +33,7 @@ bool ImportDetailRepository::save(
             ?,
             ?,
             ?,
-            ?,
+            ?
         )
         )");
 
@@ -57,7 +57,7 @@ bool ImportDetailRepository::save(
         5,
         importDetail.getMessage());
 
-    bool success = stmt->step();
+    bool success = stmt->execute();
 
     if (success)
     {

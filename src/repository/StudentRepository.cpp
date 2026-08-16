@@ -35,8 +35,7 @@ bool StudentRepository::save(
         2,
         student.getClassId());
 
-    bool result =
-        stmt->execute();
+    bool result = stmt->execute();
 
     return result;
 }
@@ -63,8 +62,7 @@ std::unique_ptr<Student> StudentRepository::findByPersonId(
 
     std::unique_ptr<Student> result = nullptr;
 
-    int code =
-        stmt->step();
+    int code = stmt->step();
 
     if (code == SQLITE_ROW)
     {

@@ -36,8 +36,7 @@ std::unique_ptr<Class> ClassRepository::findByNumber(
 
     std::unique_ptr<Class> result = nullptr;
 
-    int code =
-        stmt->step();
+    int code = stmt->step();
 
     if (code == SQLITE_ROW)
     {
@@ -96,8 +95,7 @@ bool ClassRepository::save(
         2,
         classInfo.getMajorId());
 
-    bool result =
-        stmt->execute();
+    bool result = stmt->execute();
 
     if (result)
     {
@@ -131,8 +129,7 @@ std::unique_ptr<Class> ClassRepository::findById(
 
     std::unique_ptr<Class> result = nullptr;
 
-    int code =
-        stmt->step();
+    int code = stmt->step();
 
     if (code == SQLITE_ROW)
     {

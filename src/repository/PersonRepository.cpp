@@ -59,8 +59,7 @@ bool PersonRepository::save(
         6,
         person.getResidenceConfidence());
 
-    bool result =
-        stmt->execute();
+    bool result = stmt->execute();
 
     if (result)
     {
@@ -183,8 +182,7 @@ std::unique_ptr<Person> PersonRepository::findById(
 
     std::unique_ptr<Person> result = nullptr;
 
-    int code =
-        stmt->step();
+    int code = stmt->step();
 
     if (code == SQLITE_ROW)
     {

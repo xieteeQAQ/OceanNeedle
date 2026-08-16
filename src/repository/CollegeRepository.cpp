@@ -29,8 +29,7 @@ bool CollegeRepository::save(
         1,
         college.getName());
 
-    bool result =
-        stmt->execute();
+    bool result = stmt->execute();
 
     if (result)
     {

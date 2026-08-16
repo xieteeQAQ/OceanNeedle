@@ -62,6 +62,18 @@ ImportDetailData StudentImportService::importStudent(
             row.classNumber,
             majorInfo->getId());
 
+    if (!classInfo)
+    {
+
+        importDetailData = {
+            -1,
+            row.name,
+            ImportStatus::FAILED,
+            "Class not found"};
+
+        return importDetailData;
+    }
+
     auto persons =
         personRepo.findByName(
             row.name);
@@ -95,18 +107,6 @@ ImportDetailData StudentImportService::importStudent(
 
             return importDetailData;
         }
-    }
-
-    if (!classInfo)
-    {
-
-        importDetailData = {
-            -1,
-            row.name,
-            ImportStatus::FAILED,
-            "Class not found"};
-
-        return importDetailData;
     }
 
     Person person(
