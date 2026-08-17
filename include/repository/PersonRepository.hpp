@@ -31,4 +31,6 @@ public:
         int genderConfidence,
         const std::string &residence,
         int residenceConfidence);
+
+    bool update(Person &person);
 };

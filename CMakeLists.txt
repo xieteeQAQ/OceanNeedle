@@ -32,7 +32,6 @@ add_executable(OceanNeedle
     src/model/College.cpp
     src/model/ImportRecord.cpp
     src/model/ImportDetail.cpp
-    src/model/StudentDraft.cpp
 
     src/repository/PersonRepository.cpp
     src/repository/StudentRepository.cpp

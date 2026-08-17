@@ -101,17 +101,24 @@ void ConsoleApp::printHelp() const
 {
     std::cout << R"(
 AVAILABLE COMMANDS:
-        help                  print help
+        help                                        print help
 
-        list                  list all students
+        list                                        list all students
 
-        detail <id>           view student details
+        add                                         add student
 
-        search <keyword>      search students
+        update                                      update student data
 
-        import <csv_path>     import CSV
+        detail <id>                                 view student details
 
-        exit/quit/q           exit process)"
+        search <keyword>                            search students
+
+        uncertain [gender|residence] [0|1]          find students with low-confidence data
+
+        import <csv_path>                           import CSV
+
+        exit/quit/q                                 exit process
+        )"
               << '\n';
 }
 
@@ -216,9 +223,49 @@ void ConsoleApp::importCSV(const std::vector<std::string> &args)
     }
 }
 
-void ConsoleApp::findUncertainStudents()
+void ConsoleApp::findUncertainStudents(const std::vector<std::string> &args)
 {
-    auto students = studentService.findUncertainStudents();
+    std::string field = "all";
+    int confidence = -1;
+
+    if (!args.empty())
+    {
+        if (args[0] == "gender" ||
+            args[0] == "residence" ||
+            args[0] == "all")
+        {
+            field = args[0];
+        }
+        else
+        {
+            std::cout
+                << "unknown field: " << args[0]
+                << " (use gender/residence/all)\n";
+            return;
+        }
+    }
+
+    if (args.size() >= 2)
+    {
+        std::istringstream iss(args[1]);
+        int value = 0;
+
+        if (!(iss >> value) || (value != 0 && value != 1))
+        {
+            std::cout << "confidence must be 0 or 1\n";
+            return;
+        }
+
+        confidence = value;
+    }
+
+    auto students = studentService.findUncertainStudents(field, confidence);
+
+    if (students.empty())
+    {
+        std::cout << "no uncertain students found\n";
+        return;
+    }
 
     for (const auto &s : students)
     {
@@ -231,5 +278,197 @@ void ConsoleApp::findUncertainStudents()
             << ", major: " << s.majorName
             << ", college: " << s.collegeName
             << "\n";
+    }
+}
+
+void ConsoleApp::add()
+{
+    /*
+    struct StudentDraft
+    {
+        std::string name;
+        std::string nameType;
+        std::string gender;
+        int genderConfidence = 0;
+
+        std::string residence;
+        int residenceConfidence = 0;
+
+        std::string collegeName;
+        std::string majorName;
+        std::string className;
+    };
+    */
+
+    std::string line;
+
+    StudentDraft draft;
+
+    std::cout << "\rname: " << std::flush;
+    std::getline(std::cin, draft.name);
+
+    std::cout << "\rnameType: " << std::flush;
+    std::getline(std::cin, draft.nameType);
+
+    std::cout << "\rgender: " << std::flush;
+    std::getline(std::cin, draft.gender);
+
+    std::cout << "\rgenderConfidence (0/1/2): " << std::flush;
+    std::getline(std::cin, line);
+    draft.genderConfidence = std::stoi(line);
+
+    std::cout << "\rresidence: " << std::flush;
+    std::getline(std::cin, draft.residence);
+
+    std::cout << "\rresidenceConfidence: " << std::flush;
+    std::getline(std::cin, line);
+    draft.residenceConfidence = std::stoi(line);
+
+    std::cout << "\rcollege: " << std::flush;
+    std::getline(std::cin, draft.collegeName);
+
+    std::cout << "\rmajor: " << std::flush;
+    std::getline(std::cin, draft.majorName);
+
+    std::cout << "\rclass: " << std::flush;
+    std::getline(std::cin, draft.className);
+
+    std::cout << "Confirm adding? (y/n): " << std::flush;
+    std::string confirm;
+    std::getline(std::cin, confirm);
+
+    if (confirm != "y" && confirm != "Y")
+    {
+        std::cout << "add cancel\n";
+        return;
+    }
+
+    if (studentService.addStudent(draft))
+    {
+        std::cout << "add student success\n";
+    }
+    else
+    {
+        std::cout << "add student failed\n";
+    }
+}
+
+void ConsoleApp::update(const std::vector<std::string> &args)
+{
+    /*
+    struct StudentDraft
+    {
+        std::string name;
+        std::string nameType;
+        std::string gender;
+        int genderConfidence = 0;
+
+        std::string residence;
+        int residenceConfidence = 0;
+
+        std::string collegeName;
+        std::string majorName;
+        std::string className;
+    };
+    */
+
+    if (args.empty())
+    {
+        std::cout << "usage: update <id>\n";
+        return;
+    }
+
+    int id = 0;
+    std::istringstream iss(args[0]);
+
+    if (!(iss >> id))
+    {
+        std::cout << "id must be number\n";
+        return;
+    }
+
+    auto detail = studentService.getStudentDetail(id);
+
+    if (!detail)
+    {
+        std::cout << "student not found: " << id << "\n";
+        return;
+    }
+
+    StudentDraft draft;
+
+    draft.name = detail->name;
+    draft.nameType = detail->nameType;
+    draft.gender = detail->gender;
+    draft.genderConfidence = detail->genderConfidence;
+    draft.residence = detail->residence;
+    draft.residenceConfidence = detail->residenceConfidence;
+    draft.collegeName = detail->collegeName;
+    draft.majorName = detail->majorName;
+    draft.className = detail->className;
+
+    std::string input;
+
+    std::cout << "name [" << draft.name << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.name = input;
+
+    std::cout << "nameType [" << draft.nameType << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.nameType = input;
+
+    std::cout << "gender [" << draft.gender << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.gender = input;
+
+    std::cout << "genderConfidence [" << draft.genderConfidence << "] (0/1/2): " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.genderConfidence = std::stoi(input);
+
+    std::cout << "residence [" << draft.residence << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.residence = input;
+
+    std::cout << "residenceConfidence [" << draft.residenceConfidence << "] (0/1/2): " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.residenceConfidence = std::stoi(input);
+
+    std::cout << "college [" << draft.collegeName << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.collegeName = input;
+
+    std::cout << "major [" << draft.majorName << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.majorName = input;
+
+    std::cout << "class [" << draft.className << "]: " << std::flush;
+    std::getline(std::cin, input);
+    if (!input.empty())
+        draft.className = input;
+
+    std::cout << "Confirm update? (y/n): " << std::flush;
+    std::getline(std::cin, input);
+
+    if (input != "y" && input != "Y")
+    {
+        std::cout << "update cancel\n";
+        return;
+    }
+
+    if (studentService.updateStudent(id, draft))
+    {
+        std::cout << "update student success\n";
+    }
+    else
+    {
+        std::cout << "update student failed\n";
     }
 }

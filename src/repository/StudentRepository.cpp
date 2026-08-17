@@ -128,3 +128,26 @@ std::vector<Student> StudentRepository::findAll()
 
     return result;
 }
+
+bool StudentRepository::updateClass(int personId, int newClassId)
+{
+    auto stmt =
+        database.prepare(
+            R"(
+        UPDATE Student
+        SET class_id = ?
+        WHERE person_id = ?;
+            )");
+
+    stmt->bindInt(
+        1,
+        newClassId);
+
+    stmt->bindInt(
+        2,
+        personId);
+
+    bool success = stmt->execute();
+
+    return success;
+}

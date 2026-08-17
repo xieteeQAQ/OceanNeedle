@@ -271,3 +271,51 @@ std::vector<Person> PersonRepository::findOrCreateByName(
 
     return person;
 }
+
+bool PersonRepository::update(Person &person)
+{
+    auto stmt =
+        database.prepare(
+            R"(
+        UPDATE Person
+        SET name = ?,
+            name_type = ?,
+            gender = ?,
+            gender_confidence = ?,
+            residence = ?,
+            residence_confidence = ?
+        WHERE id = ?;
+            )");
+
+    stmt->bindText(
+        1,
+        person.getName());
+
+    stmt->bindText(
+        2,
+        person.getNameType());
+
+    stmt->bindText(
+        3,
+        person.getGender());
+
+    stmt->bindInt(
+        4,
+        person.getGenderConfidence());
+
+    stmt->bindText(
+        5,
+        person.getResidence());
+
+    stmt->bindInt(
+        6,
+        person.getResidenceConfidence());
+
+    stmt->bindInt(
+        7,
+        person.getId());
+
+    bool success = stmt->execute();
+
+    return success;
+}

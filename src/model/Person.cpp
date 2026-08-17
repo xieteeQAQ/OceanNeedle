@@ -100,3 +100,33 @@ int Person::getResidenceConfidence() const
 {
     return residenceConfidence;
 }
+
+void Person::setName(const std::string &name)
+{
+    this->name = name;
+}
+
+void Person::setNameType(const std::string &nameType)
+{
+    this->nameType = nameType;
+}
+
+void Person::setGender(const std::string &gender)
+{
+    this->gender = gender;
+}
+
+void Person::setGenderConfidence(int confidence)
+{
+    this->genderConfidence = confidence;
+}
+
+void Person::setResidence(const std::string &residence)
+{
+    this->residence = residence;
+}
+
+void Person::setResidenceConfidence(int confidence)
+{
+    this->residenceConfidence = confidence;
+}

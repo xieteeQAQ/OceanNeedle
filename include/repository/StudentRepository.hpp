@@ -26,4 +26,6 @@ public:
         int classId);
 
     std::vector<Student> findAll();
+
+    bool updateClass(int personId, int newClassId);
 };

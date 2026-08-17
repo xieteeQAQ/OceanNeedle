@@ -2,6 +2,7 @@
 
 #include "StudentService.hpp"
 #include "ImportService.hpp"
+#include "StudentDetail.hpp"
 
 #include <string>
 #include <vector>
@@ -27,7 +28,9 @@ private:
     void showDetail(const std::vector<std::string> &args);
     void searchStudents(const std::vector<std::string> &args);
     void importCSV(const std::vector<std::string> &args);
-    void findUncertainStudents();
+    void findUncertainStudents(const std::vector<std::string> &args);
+    void add();
+    void update(const std::vector<std::string> &args);
 
     StudentService &studentService;
     ImportService &importService;
@@ -53,7 +56,13 @@ private:
              { importCSV(args); }},
 
             {"uncertain", [&](auto &args)
-             { findUncertainStudents(); }},
+             { findUncertainStudents(args); }},
+
+            {"add", [&](auto &args)
+             { add(); }},
+
+            {"update", [&](auto &args)
+             { update(args); }},
 
             {"exit", [&](auto &args)
              { running = false; }},

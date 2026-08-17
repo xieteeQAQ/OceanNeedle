@@ -6,6 +6,7 @@ struct StudentSummary
 {
     int personId = 0;
     std::string name;
+    std::string nameTpye;
     std::string gender;
     int genderConfidence = 0;
     std::string className;

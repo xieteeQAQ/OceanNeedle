@@ -101,6 +101,7 @@ std::vector<StudentSummary> StudentService::listAllStudents()
 
         result.push_back({person->getId(),
                           person->getName(),
+                          person->getNameType(),
                           person->getGender(),
                           person->getGenderConfidence(),
                           classInfo->getClassNumber(),
@@ -181,6 +182,7 @@ std::vector<StudentSummary> StudentService::searchStudents(const std::string &ke
     for (const auto &student : allStudents)
     {
         if (student.name.find(keyword) != std::string::npos ||
+            student.nameTpye.find(keyword) != std::string::npos ||
             student.gender.find(keyword) != std::string::npos ||
             student.className.find(keyword) != std::string::npos ||
             student.majorName.find(keyword) != std::string::npos ||
@@ -194,7 +196,9 @@ std::vector<StudentSummary> StudentService::searchStudents(const std::string &ke
     return result;
 }
 
-std::vector<StudentSummary> StudentService::findUncertainStudents()
+std::vector<StudentSummary> StudentService::findUncertainStudents(
+    const std::string &field,
+    int confidence)
 {
     std::vector<StudentSummary> result;
 
@@ -202,13 +206,39 @@ std::vector<StudentSummary> StudentService::findUncertainStudents()
 
     for (const auto &student : allStudents)
     {
-        bool genderUncertain =
-            student.gender.empty() ||
-            student.genderConfidence != 2;
+        bool genderUncertain = false;
+        bool residenceUncertain = false;
 
-        bool residenceUncertain =
-            student.residence.empty() ||
-            student.residenceConfidence != 2;
+        auto isUncertain = [confidence](
+                               const std::string &value,
+                               int actualConfidence)
+        {
+            if (confidence == -1)
+            {
+                return value.empty() || actualConfidence < 2;
+            }
+
+            if (value.empty())
+            {
+                return confidence == 0;
+            }
+
+            return actualConfidence == confidence;
+        };
+
+        if (field == "all" || field == "gender")
+        {
+            genderUncertain = isUncertain(
+                student.gender,
+                student.genderConfidence);
+        }
+
+        if (field == "all" || field == "residence")
+        {
+            residenceUncertain = isUncertain(
+                student.residence,
+                student.residenceConfidence);
+        }
 
         if (genderUncertain || residenceUncertain)
         {
@@ -217,4 +247,71 @@ std::vector<StudentSummary> StudentService::findUncertainStudents()
     }
 
     return result;
+}
+
+bool StudentService::addStudent(const StudentDraft &draft)
+{
+    auto college = collegeRepo.findOrCreateByName(draft.collegeName);
+    if (!college)
+        return false;
+
+    auto major = majorRepo.findOrCreateByName(draft.majorName, college->getId());
+    if (!major)
+        return false;
+
+    auto classInfo = classRepo.findOrCreateByNumber(draft.className, major->getId());
+    if (!classInfo)
+        return false;
+
+    Person person(
+        draft.name,
+        draft.nameType,
+        draft.gender,
+        draft.genderConfidence,
+        draft.residence,
+        draft.residenceConfidence);
+
+    if (!personRepo.save(person))
+        return false;
+
+    Student student(person.getId(), classInfo->getId());
+    return studentRepo.save(student);
+}
+
+bool StudentService::updateStudent(int personId, const StudentDraft &draft)
+{
+    auto student = studentRepo.findByPersonId(personId);
+    if (!student)
+        return false;
+
+    auto college = collegeRepo.findOrCreateByName(draft.collegeName);
+    if (!college)
+        return false;
+
+    auto major = majorRepo.findOrCreateByName(draft.majorName, college->getId());
+    if (!major)
+        return false;
+
+    auto classInfo = classRepo.findOrCreateByNumber(draft.className, major->getId());
+    if (!classInfo)
+        return false;
+
+    Person person(
+        personId,
+        draft.name,
+        draft.nameType,
+        draft.gender,
+        draft.genderConfidence,
+        draft.residence,
+        draft.residenceConfidence);
+
+    if (!personRepo.update(person))
+        return false;
+
+    if (student->getClassId() != classInfo->getId())
+    {
+        return studentRepo.updateClass(personId, classInfo->getId());
+    }
+
+    return true;
 }
