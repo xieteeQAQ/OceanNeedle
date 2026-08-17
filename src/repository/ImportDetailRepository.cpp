@@ -1,6 +1,8 @@
 #include "ImportDetailRepository.hpp"
 #include "Statement.hpp"
 
+#include <iostream>
+
 ImportDetailRepository::ImportDetailRepository(
     Database &db)
     : database(db)
@@ -34,7 +36,7 @@ bool ImportDetailRepository::save(
             ?,
             ?,
             ?
-        )
+        );
         )");
 
     stmt->bindInt(

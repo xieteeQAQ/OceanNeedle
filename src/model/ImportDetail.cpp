@@ -30,7 +30,6 @@ ImportDetail::ImportDetail(
         this->status = "SUCCESS";
     }
 
-
     this->message = message;
 }
 

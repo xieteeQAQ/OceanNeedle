@@ -17,7 +17,7 @@ StudentImporter::readCSV(
     if (!file.is_open())
     {
         std::cerr
-            << "Cannot open csv\n";
+            << "cannot open csv \'" << path << "\'\n";
 
         return students;
     }

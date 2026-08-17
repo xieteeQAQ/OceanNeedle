@@ -41,6 +41,8 @@ private:
         {"detail", [&](auto &args){ showDetail(args); }},
         {"search", [&](auto &args) { searchStudents(args); }},
         {"import", [&](auto &args) { importCSV(args); }},
-        {"exit", [&](auto &args) { running = false; }},
+        {"exit", [&](auto &args){ running = false; }},
+        {"quit", [&](auto &args){ running = false; }},
+        {"q", [&](auto &args){ running = false; }},
     };
 };

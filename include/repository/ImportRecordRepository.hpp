@@ -2,6 +2,7 @@
 
 #include "ImportRecord.hpp"
 #include "Database.hpp"
+#include "Statement.hpp"
 
 class ImportRecordRepository
 {

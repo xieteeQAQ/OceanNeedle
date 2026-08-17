@@ -96,14 +96,20 @@ void ConsoleApp::listStudents()
 
 void ConsoleApp::printHelp() const
 {
-    std::cout
-        << "AVAILABLE COMMANDS:\n"
-        << "  help                  print help\n\n"
-        << "  list                  list all students\n\n"
-        << "  detail <id>           view student details\n\n"
-        << "  search <keyword>      search students\n\n"
-        << "  import <csv_path>     import CSV\n\n"
-        << "  exit                  exit process\n\n";
+    std::cout << R"(
+AVAILABLE COMMANDS:
+        help                  print help
+
+        list                  list all students
+
+        detail <id>           view student details
+
+        search <keyword>      search students
+
+        import <csv_path>     import CSV
+
+        exit/quit/q           exit process)"
+              << '\n';
 }
 
 void ConsoleApp::showDetail(const std::vector<std::string> &args)
@@ -174,7 +180,8 @@ void ConsoleApp::searchStudents(const std::vector<std::string> &args)
             << "id: " << s.personId
             << ", name: " << s.name
             << ", class: " << s.className
-            << ", college: " << s.majorName
+            << ", major: " << s.majorName
+            << ", college: " << s.collegeName
             << "\n";
     }
 }
@@ -187,6 +194,19 @@ void ConsoleApp::importCSV(const std::vector<std::string> &args)
         return;
     }
 
-    // TODO: 等 ImportService 实现后再接入
-    std::cout << "the import functionality is not yet implemented\n";
+    const std::string &filename = args[0];
+
+    auto result = importService.importFromCSV(filename);
+
+    if (result.has_value())
+    {
+        std::cout << "import csv success\n"
+                  << "success: " << result->successCount << ", "
+                  << "skipped: " << result->skippedCount << ", "
+                  << "failed: " << result->failedCount << '\n';
+    }
+    else
+    {
+        std::cout << "import failed or no data\n";
+    }
 }

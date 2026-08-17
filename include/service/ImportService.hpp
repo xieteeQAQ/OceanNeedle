@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <optional>
 
 #include "StudentImporter.hpp"
 #include "StudentImportService.hpp"
@@ -17,13 +19,12 @@ public:
         ImportRecordRepository &recordRepo,
         ImportDetailRepository &detailRepo);
 
-    ImportResult importFromCSV(const std::string &filename);
+    std::optional<ImportResult> importFromCSV(const std::string &filename);
 
 private:
-    bool saveImportRecord(
+    std::optional<ImportRecord> saveImportRecord(
         const std::string &filename,
-        const ImportResult &result,
-        int &recordId);
+        const ImportResult &result);
 
     bool saveImportDetails(
         int recordId,
