@@ -102,10 +102,12 @@ std::vector<StudentSummary> StudentService::listAllStudents()
         result.push_back({person->getId(),
                           person->getName(),
                           person->getGender(),
+                          person->getGenderConfidence(),
                           classInfo->getClassNumber(),
                           major->getName(),
                           college->getName(),
-                          person->getResidence()});
+                          person->getResidence(),
+                          person->getResidenceConfidence()});
     }
 
     return result;
@@ -178,13 +180,37 @@ std::vector<StudentSummary> StudentService::searchStudents(const std::string &ke
 
     for (const auto &student : allStudents)
     {
-        
         if (student.name.find(keyword) != std::string::npos ||
             student.gender.find(keyword) != std::string::npos ||
             student.className.find(keyword) != std::string::npos ||
             student.majorName.find(keyword) != std::string::npos ||
             student.collegeName.find(keyword) != std::string::npos ||
             student.residence.find(keyword) != std::string::npos)
+        {
+            result.push_back(student);
+        }
+    }
+
+    return result;
+}
+
+std::vector<StudentSummary> StudentService::findUncertainStudents()
+{
+    std::vector<StudentSummary> result;
+
+    auto allStudents = listAllStudents();
+
+    for (const auto &student : allStudents)
+    {
+        bool genderUncertain =
+            student.gender.empty() ||
+            student.genderConfidence != 2;
+
+        bool residenceUncertain =
+            student.residence.empty() ||
+            student.residenceConfidence != 2;
+
+        if (genderUncertain || residenceUncertain)
         {
             result.push_back(student);
         }

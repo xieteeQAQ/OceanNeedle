@@ -47,8 +47,4 @@ public:
         const std::vector<StudentRow> &rows,
         ImportMode mode = ImportMode::STRICT,
         DuplicatePolicy policy = DuplicatePolicy::SKIP);
-
-    std::optional<Student> findByPersonAndClass(
-        int personId,
-        int classId);
 };

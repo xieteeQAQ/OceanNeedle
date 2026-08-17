@@ -27,6 +27,7 @@ private:
     void showDetail(const std::vector<std::string> &args);
     void searchStudents(const std::vector<std::string> &args);
     void importCSV(const std::vector<std::string> &args);
+    void findUncertainStudents();
 
     StudentService &studentService;
     ImportService &importService;
@@ -35,14 +36,32 @@ private:
     using Command = std::function<void(const std::vector<std::string> &)>;
 
     std::map<std::string, Command> commands =
-    {
-        {"help", [&](auto &args) { printHelp(); }},
-        {"list", [&](auto &args) { listStudents(); }},
-        {"detail", [&](auto &args){ showDetail(args); }},
-        {"search", [&](auto &args) { searchStudents(args); }},
-        {"import", [&](auto &args) { importCSV(args); }},
-        {"exit", [&](auto &args){ running = false; }},
-        {"quit", [&](auto &args){ running = false; }},
-        {"q", [&](auto &args){ running = false; }},
+        {
+            {"help", [&](auto &args)
+             { printHelp(); }},
+
+            {"list", [&](auto &args)
+             { listStudents(); }},
+
+            {"detail", [&](auto &args)
+             { showDetail(args); }},
+
+            {"search", [&](auto &args)
+             { searchStudents(args); }},
+
+            {"import", [&](auto &args)
+             { importCSV(args); }},
+
+            {"uncertain", [&](auto &args)
+             { findUncertainStudents(); }},
+
+            {"exit", [&](auto &args)
+             { running = false; }},
+
+            {"quit", [&](auto &args)
+             { running = false; }},
+
+            {"q", [&](auto &args)
+             { running = false; }},
     };
 };

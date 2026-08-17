@@ -1,4 +1,5 @@
 #include "ConsoleApp.hpp"
+#include "Confidence.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -17,7 +18,7 @@ void ConsoleApp::run()
     while (running)
     {
 
-        std::cout << "> " << std::flush;
+        std::cout << "OceanNeedle> " << std::flush;
         std::getline(std::cin, line);
 
         if (line.empty())
@@ -71,10 +72,12 @@ void ConsoleApp::listStudents()
         int personId = 0;
         std::string name;
         std::string gender;
+        int genderConfidence = 0;
         std::string className;
         std::string majorName;
         std::string collegeName;
         std::string residence;
+        int residenceConfidence = 0;
     }
     */
 
@@ -82,15 +85,15 @@ void ConsoleApp::listStudents()
 
     for (const auto &s : students)
     {
-
         std::cout
-            << "id: " << s.personId << '\n'
-            << "name: " << s.name << '\n'
-            << "gender: " << s.gender << '\n'
-            << "class: " << s.className << '\n'
-            << "major: " << s.majorName << '\n'
-            << "college: " << s.collegeName << '\n'
-            << "residence: " << s.residence << '\n';
+            << "id: " << s.personId
+            << ", name: " << s.name
+            << ", gender: " << s.gender
+            << (s.genderConfidence == 0 ? "[?]" : "")
+            << ", class: " << s.className
+            << ", major: " << s.majorName
+            << ", college: " << s.collegeName
+            << "\n";
     }
 }
 
@@ -139,10 +142,12 @@ void ConsoleApp::showDetail(const std::vector<std::string> &args)
 
     std::cout
         << "ID: " << detail->personId << "\n"
-        << "name: " << detail->name << "\n"
-        << "nameType: " << detail->nameType << "\n"
-        << "gender: " << detail->gender << "\n"
-        << "residence: " << detail->residence << "\n"
+        << "name: " << detail->name
+        << " (nameType: " << detail->nameType << ")" << "\n"
+        << "gender: " << detail->gender
+        << " (confidence: " << confidenceLabel(detail->genderConfidence) << ")" << "\n"
+        << "residence: " << detail->residence
+        << " (confidence: " << confidenceLabel(detail->residenceConfidence) << ")" << "\n"
         << "class: " << detail->className << "\n"
         << "major: " << detail->majorName << "\n"
         << "college: " << detail->collegeName << "\n";
@@ -177,7 +182,7 @@ void ConsoleApp::searchStudents(const std::vector<std::string> &args)
     for (const auto &s : results)
     {
         std::cout
-            << "id: " << s.personId
+            << "ID: " << s.personId
             << ", name: " << s.name
             << ", class: " << s.className
             << ", major: " << s.majorName
@@ -208,5 +213,23 @@ void ConsoleApp::importCSV(const std::vector<std::string> &args)
     else
     {
         std::cout << "import failed or no data\n";
+    }
+}
+
+void ConsoleApp::findUncertainStudents()
+{
+    auto students = studentService.findUncertainStudents();
+
+    for (const auto &s : students)
+    {
+        std::cout
+            << "ID: " << s.personId
+            << ", name: " << s.name
+            << ", gender: " << s.gender
+            << (s.genderConfidence == 0 ? "[?]" : "")
+            << ", class: " << s.className
+            << ", major: " << s.majorName
+            << ", college: " << s.collegeName
+            << "\n";
     }
 }

@@ -42,4 +42,6 @@ public:
     std::optional<StudentDetail> getStudentDetail(int personId);
 
     std::vector<StudentSummary> searchStudents(const std::string &keyword);
+
+    std::vector<StudentSummary> findUncertainStudents();
 };

@@ -2,15 +2,17 @@
 
 #include <string>
 
-struct StudentSummary
+struct StudentDraft
 {
-    int personId = 0;
     std::string name;
+    std::string nameType;
     std::string gender;
     int genderConfidence = 0;
-    std::string className;
-    std::string majorName;
-    std::string collegeName;
+
     std::string residence;
     int residenceConfidence = 0;
+
+    std::string collegeName;
+    std::string majorName;
+    std::string className;
 };

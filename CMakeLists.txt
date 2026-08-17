@@ -32,6 +32,7 @@ add_executable(OceanNeedle
     src/model/College.cpp
     src/model/ImportRecord.cpp
     src/model/ImportDetail.cpp
+    src/model/StudentDraft.cpp
 
     src/repository/PersonRepository.cpp
     src/repository/StudentRepository.cpp
@@ -44,10 +45,14 @@ add_executable(OceanNeedle
     src/service/StudentService.cpp
     src/service/StudentImportService.cpp
     src/service/ImportService.cpp
-    
+
     src/importer/StudentImporter.cpp
+
     src/util/CSVReader.cpp
+    src/util/Confidence.cpp
+
     src/validator/StudentValidator.cpp
+
     src/app/ConsoleApp.cpp
 )
 
