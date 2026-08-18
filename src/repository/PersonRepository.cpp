@@ -319,3 +319,13 @@ bool PersonRepository::update(Person &person)
 
     return success;
 }
+
+bool PersonRepository::removeById(int id)
+{
+    auto stmt = database.prepare(
+        "DELETE FROM Person WHERE id = ?;");
+
+    stmt->bindInt(1, id);
+
+    return stmt->execute();
+}

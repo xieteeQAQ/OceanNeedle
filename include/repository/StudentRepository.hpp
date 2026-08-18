@@ -28,4 +28,6 @@ public:
     std::vector<Student> findAll();
 
     bool updateClass(int personId, int newClassId);
+
+    bool removeByPersonId(int personId);
 };

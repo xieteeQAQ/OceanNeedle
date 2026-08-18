@@ -151,3 +151,13 @@ bool StudentRepository::updateClass(int personId, int newClassId)
 
     return success;
 }
+
+bool StudentRepository::removeByPersonId(int personId)
+{
+    auto stmt = database.prepare(
+        "DELETE FROM Student WHERE person_id = ?;");
+
+    stmt->bindInt(1, personId);
+
+    return stmt->execute();
+}

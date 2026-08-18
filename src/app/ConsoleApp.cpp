@@ -101,23 +101,25 @@ void ConsoleApp::printHelp() const
 {
     std::cout << R"(
 AVAILABLE COMMANDS:
-        help                                        print help
+        help                                            print help
 
-        list                                        list all students
+        list/ls                                         list all students
 
-        add                                         add student
+        add                                             add student
 
-        update                                      update student data
+        update/up <id>                                  update student data
 
-        detail <id>                                 view student details
+        detail/dt <id>                                  view student details
 
-        search <keyword>                            search students
+        search/sea <keyword>                            search students
 
-        uncertain [gender|residence] [0|1]          find students with low-confidence data
+        uncertain/uncer [gender|residence] [0|1]        find students with low-confidence data
 
-        import <csv_path>                           import CSV
+        remove/rm <id>                                  delete a student
 
-        exit/quit/q                                 exit process
+        import/imp <csv_path>                           import CSV
+
+        exit/quit/q                                     exit process
         )"
               << '\n';
 }
@@ -126,7 +128,7 @@ void ConsoleApp::showDetail(const std::vector<std::string> &args)
 {
     if (args.empty())
     {
-        std::cout << "usage: detail <id>\n";
+        std::cout << "usage: detail/dt <id>\n";
         return;
     }
 
@@ -164,7 +166,7 @@ void ConsoleApp::searchStudents(const std::vector<std::string> &args)
 {
     if (args.empty())
     {
-        std::cout << "usage: search <keyword>\n";
+        std::cout << "usage: search/sea <keyword>\n";
         return;
     }
 
@@ -202,7 +204,7 @@ void ConsoleApp::importCSV(const std::vector<std::string> &args)
 {
     if (args.empty())
     {
-        std::cout << "usage: import <csv_path>\n";
+        std::cout << "usage: import/imp <csv_path>\n";
         return;
     }
 
@@ -374,7 +376,7 @@ void ConsoleApp::update(const std::vector<std::string> &args)
 
     if (args.empty())
     {
-        std::cout << "usage: update <id>\n";
+        std::cout << "usage: update/up <id>\n";
         return;
     }
 
@@ -470,5 +472,58 @@ void ConsoleApp::update(const std::vector<std::string> &args)
     else
     {
         std::cout << "update student failed\n";
+    }
+}
+
+void ConsoleApp::removeStudent(const std::vector<std::string> &args)
+{
+    if (args.empty())
+    {
+        std::cout << "usage: remove/rm <id>\n";
+        return;
+    }
+
+    int id = 0;
+    std::istringstream iss(args[0]);
+
+    if (!(iss >> id))
+    {
+        std::cout << "id must be number\n";
+        return;
+    }
+
+    auto detail = studentService.getStudentDetail(id);
+
+    if (!detail)
+    {
+        std::cout << "student not found: " << id << "\n";
+        return;
+    }
+
+    std::cout
+        << "You are about to delete:\n"
+        << "ID: " << detail->personId << "\n"
+        << "name: " << detail->name << "\n"
+        << "class: " << detail->className << "\n"
+        << "major: " << detail->majorName << "\n"
+        << "college: " << detail->collegeName << "\n";
+
+    std::cout << "Confirm delete? (y/n): " << std::flush;
+    std::string confirm;
+    std::getline(std::cin, confirm);
+
+    if (confirm != "y" && confirm != "Y")
+    {
+        std::cout << "delete cancel\n";
+        return;
+    }
+
+    if (studentService.deleteStudent(id))
+    {
+        std::cout << "delete student success\n";
+    }
+    else
+    {
+        std::cout << "delete student failed\n";
     }
 }

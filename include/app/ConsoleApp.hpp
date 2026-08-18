@@ -31,6 +31,7 @@ private:
     void findUncertainStudents(const std::vector<std::string> &args);
     void add();
     void update(const std::vector<std::string> &args);
+    void removeStudent(const std::vector<std::string> &args);
 
     StudentService &studentService;
     ImportService &importService;
@@ -46,16 +47,31 @@ private:
             {"list", [&](auto &args)
              { listStudents(); }},
 
+            {"ls", [&](auto &args)
+             { listStudents(); }},
+
             {"detail", [&](auto &args)
+             { showDetail(args); }},
+
+            {"dt", [&](auto &args)
              { showDetail(args); }},
 
             {"search", [&](auto &args)
              { searchStudents(args); }},
 
+            {"sea", [&](auto &args)
+             { searchStudents(args); }},
+
             {"import", [&](auto &args)
              { importCSV(args); }},
 
+            {"imp", [&](auto &args)
+             { importCSV(args); }},
+
             {"uncertain", [&](auto &args)
+             { findUncertainStudents(args); }},
+
+            {"uncer", [&](auto &args)
              { findUncertainStudents(args); }},
 
             {"add", [&](auto &args)
@@ -63,6 +79,15 @@ private:
 
             {"update", [&](auto &args)
              { update(args); }},
+
+            {"up", [&](auto &args)
+             { update(args); }},
+
+            {"remove", [&](auto &args)
+             { removeStudent(args); }},
+
+            {"rm", [&](auto &args)
+             { removeStudent(args); }},
 
             {"exit", [&](auto &args)
              { running = false; }},

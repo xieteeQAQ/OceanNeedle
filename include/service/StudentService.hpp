@@ -49,4 +49,6 @@ public:
     bool addStudent(const StudentDraft &draft);
 
     bool updateStudent(int personId, const StudentDraft &draft);
+
+    bool deleteStudent(int personId);
 };

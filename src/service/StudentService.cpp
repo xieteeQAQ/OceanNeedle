@@ -315,3 +315,18 @@ bool StudentService::updateStudent(int personId, const StudentDraft &draft)
 
     return true;
 }
+
+bool StudentService::deleteStudent(int personId)
+{
+    auto student = studentRepo.findByPersonId(personId);
+    if (!student)
+        return false;
+
+    if (!studentRepo.removeByPersonId(personId))
+        return false;
+
+    if (!personRepo.removeById(personId))
+        return false;
+
+    return true;
+}

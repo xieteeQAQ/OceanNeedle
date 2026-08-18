@@ -33,4 +33,6 @@ public:
         int residenceConfidence);
 
     bool update(Person &person);
+
+    bool removeById(int id);
 };
