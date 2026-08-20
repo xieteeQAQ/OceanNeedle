@@ -25,4 +25,6 @@ public:
 
     std::unique_ptr<Major> findById(
         int id);
+
+    std::vector<Major> findAll();
 };

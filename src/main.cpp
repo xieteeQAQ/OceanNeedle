@@ -61,6 +61,7 @@ int main()
         db);
 
     StudentService studentService(
+        db,
         studentRepo,
         personRepo,
         classRepo,

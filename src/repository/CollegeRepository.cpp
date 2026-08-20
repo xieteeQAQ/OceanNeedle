@@ -158,3 +158,23 @@ std::unique_ptr<College> CollegeRepository::findOrCreateByName(
 
     return college;
 }
+
+std::vector<College> CollegeRepository::findAll()
+{
+    std::vector<College> result;
+
+    auto stmt = database.prepare(
+        "SELECT id, name FROM College;");
+
+    while (stmt->step() == SQLITE_ROW)
+    {
+        int id = sqlite3_column_int(stmt->get(), 0);
+
+        std::string name = reinterpret_cast<const char *>(
+            sqlite3_column_text(stmt->get(), 1));
+
+        result.push_back(College(id, name));
+    }
+
+    return result;
+}

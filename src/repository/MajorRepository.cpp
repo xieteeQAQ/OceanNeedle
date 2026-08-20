@@ -178,3 +178,25 @@ std::unique_ptr<Major> MajorRepository::findById(
 
     return result;
 }
+
+std::vector<Major> MajorRepository::findAll()
+{
+    std::vector<Major> result;
+
+    auto stmt = database.prepare(
+        "SELECT id, name, college_id FROM Major;");
+
+    while (stmt->step() == SQLITE_ROW)
+    {
+        int id = sqlite3_column_int(stmt->get(), 0);
+
+        std::string name = reinterpret_cast<const char *>(
+            sqlite3_column_text(stmt->get(), 1));
+
+        int collegeId = sqlite3_column_int(stmt->get(), 2);
+
+        result.push_back(Major(id, name, collegeId));
+    }
+
+    return result;
+}

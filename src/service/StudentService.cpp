@@ -3,12 +3,14 @@
 #include <iostream>
 
 StudentService::StudentService(
+    Database &db,
     StudentRepository &studentRepo,
     PersonRepository &personRepo,
     ClassRepository &classRepo,
     MajorRepository &majorRepo,
     CollegeRepository &collegeRepo)
-    : studentRepo(studentRepo),
+    : db(db),
+      studentRepo(studentRepo),
       personRepo(personRepo),
       classRepo(classRepo),
       majorRepo(majorRepo),
@@ -112,6 +114,21 @@ std::vector<StudentSummary> StudentService::listAllStudents()
     }
 
     return result;
+}
+
+std::vector<College> StudentService::listAllColleges()
+{
+    return collegeRepo.findAll();
+}
+
+std::vector<Class> StudentService::listAllClass()
+{
+    return classRepo.findAll();
+}
+
+std::vector<Major> StudentService::listAllMajors()
+{
+    return majorRepo.findAll();
 }
 
 std::optional<StudentDetail> StudentService::getStudentDetail(int personId)
@@ -322,11 +339,20 @@ bool StudentService::deleteStudent(int personId)
     if (!student)
         return false;
 
+    db.beginTransaction();
+
     if (!studentRepo.removeByPersonId(personId))
+    {
+        db.rollback();
         return false;
+    }
 
     if (!personRepo.removeById(personId))
+    {
+        db.rollback();
         return false;
+    }
 
+    db.commit();
     return true;
 }

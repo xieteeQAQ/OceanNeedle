@@ -28,4 +28,6 @@ public:
 
     bool save(
         Class &classInfo);
+
+    std::vector<Class> findAll();
 };

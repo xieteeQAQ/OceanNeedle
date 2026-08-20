@@ -24,7 +24,7 @@ public:
 private:
     void handleCommand(const std::string &line);
     void printHelp() const;
-    void listStudents();
+    void list(const std::vector<std::string> &args);
     void showDetail(const std::vector<std::string> &args);
     void searchStudents(const std::vector<std::string> &args);
     void importCSV(const std::vector<std::string> &args);
@@ -45,10 +45,10 @@ private:
              { printHelp(); }},
 
             {"list", [&](auto &args)
-             { listStudents(); }},
+             { list(args); }},
 
             {"ls", [&](auto &args)
-             { listStudents(); }},
+             { list(args); }},
 
             {"detail", [&](auto &args)
              { showDetail(args); }},

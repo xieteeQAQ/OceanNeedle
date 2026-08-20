@@ -187,3 +187,24 @@ std::unique_ptr<Class> ClassRepository::findOrCreateByNumber(
 
     return classInfo;
 }
+
+std::vector<Class> ClassRepository::findAll()
+{
+    std::vector<Class> result;
+
+    auto stmt = database.prepare("SELECT id, class_number, major_id FROM Class;");
+
+    while (stmt->step() == SQLITE_ROW)
+    {
+        int id = sqlite3_column_int(stmt->get(), 0);
+
+        std::string number = reinterpret_cast<const char *>(
+            sqlite3_column_text(stmt->get(), 1));
+
+        int majorId = sqlite3_column_int(stmt->get(), 2);
+
+        result.push_back(Class(id, number, majorId));
+    }
+
+    return result;
+}

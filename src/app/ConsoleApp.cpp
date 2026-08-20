@@ -63,7 +63,7 @@ void ConsoleApp::handleCommand(const std::string &line)
     }
 }
 
-void ConsoleApp::listStudents()
+void ConsoleApp::list(const std::vector<std::string> &args)
 {
 
     /*
@@ -81,19 +81,99 @@ void ConsoleApp::listStudents()
     }
     */
 
-    auto students = studentService.listAllStudents();
+    bool listCollege = false;
+    bool listMajor = false;
+    bool listClass = false;
+    bool listStudents = false;
 
-    for (const auto &s : students)
+    if (args.empty())
     {
-        std::cout
-            << "id: " << s.personId
-            << ", name: " << s.name
-            << ", gender: " << s.gender
-            << (s.genderConfidence == 0 ? "[?]" : "")
-            << ", class: " << s.className
-            << ", major: " << s.majorName
-            << ", college: " << s.collegeName
-            << "\n";
+        listStudents = true;
+    }
+    else if (args[0][0] == '-')
+    {
+        std::string arg = args[0];
+
+        for (char a : arg)
+        {
+            if (a == 'C')
+                listCollege = true;
+            else if (a == 'm')
+                listMajor = true;
+            else if (a == 'c')
+                listClass = true;
+            else if (a == 's')
+                listStudents = true;
+            else if (a == 'a')
+            {
+                listCollege = true;
+                listMajor = true;
+                listClass = true;
+                listStudents = true;
+            }
+        }
+    }
+    else
+    {
+
+    }
+
+    if (listCollege)
+    {
+        auto colleges = studentService.listAllColleges();
+
+        for (const auto &c : colleges)
+        {
+            std::cout
+                << "college ID: " << c.getId()
+                << ", name: " << c.getName()
+                << "\n";
+        }
+    }
+
+    if (listMajor)
+    {
+        auto majors = studentService.listAllMajors();
+
+        for (const auto &m : majors)
+        {
+            std::cout
+                << "major ID: " << m.getId()
+                << ", name: " << m.getName()
+                << ", college ID: " << m.getCollegeId()
+                << "\n";
+        }
+    }
+
+    if (listClass)
+    {
+        auto classes = studentService.listAllClass();
+
+        for (const auto &c : classes)
+        {
+            std::cout
+                << "class ID: " << c.getId()
+                << ", number: " << c.getClassNumber()
+                << ", major ID: " << c.getMajorId()
+                << "\n";
+        }
+    }
+
+    if (listStudents)
+    {
+        auto students = studentService.listAllStudents();
+        for (const auto &s : students)
+        {
+            std::cout
+                << "student ID: " << s.personId
+                << ", name: " << s.name
+                << ", gender: " << s.gender
+                << (s.genderConfidence == 0 ? "[?]" : "")
+                << ", class: " << s.className
+                << ", major: " << s.majorName
+                << ", college: " << s.collegeName
+                << "\n";
+        }
     }
 }
 

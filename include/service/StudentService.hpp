@@ -17,6 +17,8 @@ class StudentService
 {
 
 private:
+    Database &db;
+
     StudentRepository &studentRepo;
 
     PersonRepository &personRepo;
@@ -29,6 +31,7 @@ private:
 
 public:
     StudentService(
+        Database &db,
         StudentRepository &studentRepo,
         PersonRepository &personRepo,
         ClassRepository &classRepo,
@@ -39,6 +42,12 @@ public:
         int studentId);
 
     std::vector<StudentSummary> listAllStudents();
+
+    std::vector<College> listAllColleges();
+
+    std::vector<Class> listAllClass();
+
+    std::vector<Major> listAllMajors();
 
     std::optional<StudentDetail> getStudentDetail(int personId);
 

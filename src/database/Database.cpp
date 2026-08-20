@@ -111,11 +111,10 @@ bool Database::rollback()
 
 bool Database::initialize()
 {
-
-    beginTransaction();
-
     execute(
         "PRAGMA foreign_keys = ON;");
+
+    beginTransaction();
 
     bool success = true;
 

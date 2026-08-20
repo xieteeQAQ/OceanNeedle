@@ -23,4 +23,6 @@ public:
 
     std::unique_ptr<College> findOrCreateByName(
         const std::string &name);
+
+    std::vector<College> findAll();
 };
